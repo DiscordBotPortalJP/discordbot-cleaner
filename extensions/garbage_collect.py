@@ -34,8 +34,12 @@ class GarbageCollectCog(commands.Cog):
                 if isinstance(message.author, discord.User):
                     garbages.add(message)
                     users.add(message.author)
-                    await message.delete()
-                    await asyncio.sleep(1)
+        await notice.edit(content='メッセージを削除中です', embed=discord.Embed(
+            description=f'削除対象メッセージ：{len(garbages)}件\n\n削除対象ユーザ\n{" ".join([u.mention for u in users])}',
+        ))
+        for message in garbages:
+            await message.delete()
+            await asyncio.sleep(1)
         await notice.edit(content='全TCのメッセージの確認が完了しました', embed=discord.Embed(
             description=f'削除対象メッセージ：{len(garbages)}件\n\n削除対象ユーザ\n{" ".join([u.mention for u in users])}',
         ))
