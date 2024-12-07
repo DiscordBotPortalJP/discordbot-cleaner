@@ -16,8 +16,8 @@ class GarbageCollectCog(commands.Cog):
     @excepter
     @dpylogger
     async def _garbate_collect(self, interaction: discord.Interaction):
-        await interaction.response.defer(ephemeral=True)
-        notice = await interaction.followup.send('全TCのメッセージを確認中です', ephemeral=True)
+        await interaction.response.send_message('サーバー内のTCから退出者のメッセージを全削除します', ephemeral=True)
+        notice = await interaction.channel.send('全TCのメッセージを確認中です')
         garbages: set[discord.Message] = set()
         users: set[discord.User] = set()
         for index, tc in enumerate(interaction.guild.text_channels):
@@ -34,10 +34,11 @@ class GarbageCollectCog(commands.Cog):
                 if isinstance(message.author, discord.User):
                     garbages.add(message)
                     users.add(message.author)
-        await notice.edit(content='メッセージを削除中です', embed=discord.Embed(
-            description=f'削除対象メッセージ：{len(garbages)}件\n\n削除対象ユーザ\n{" ".join([u.mention for u in users])}',
-        ))
-        for message in garbages:
+        for index, message in enumerate(garbages):
+            if index % 10 == 0:
+                await notice.edit(content=f'メッセージを削除中です（{index}/{len(garbages)}件完了）', embed=discord.Embed(
+                    description=f'削除対象メッセージ：{len(garbages)}件\n\n削除対象ユーザ\n{" ".join([u.mention for u in users])}',
+                ))
             await message.delete()
             await asyncio.sleep(1)
         await notice.edit(content='全TCのメッセージの確認が完了しました', embed=discord.Embed(
