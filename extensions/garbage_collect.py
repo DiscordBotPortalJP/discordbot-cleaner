@@ -41,12 +41,12 @@ class GarbageCollectCog(commands.Cog):
         channels: set[discord.TextChannel] = set()
         users: set[discord.User] = set()
         fourteen_days_ago = datetime.datetime.now() - datetime.timedelta(days=14)
-        for index, tc in enumerate(interaction.guild.text_channels):
+        for index, channel in enumerate(interaction.guild.text_channels):
             await notice.edit(
-                content=f'{tc.mention} を確認中（{index}件目）',
+                content=f'{channel.mention} を確認中（{index}件目）',
                 embeds=compose_embeds(garbages, channels, users),
             )
-            async for message in tc.history(limit=None, after=fourteen_days_ago):
+            async for message in channel.history(limit=None, after=fourteen_days_ago):
                 if message.author.bot:
                     continue
                 if message.type is not discord.MessageType.default and message.type is not discord.MessageType.reply:
@@ -85,12 +85,12 @@ class GarbageCollectCog(commands.Cog):
         channels: set[discord.VoiceChannel] = set()
         users: set[discord.User] = set()
         fourteen_days_ago = datetime.datetime.now() - datetime.timedelta(days=14)
-        for index, tc in enumerate(interaction.guild.text_channels):
+        for index, channel in enumerate(interaction.guild.voice_channels):
             await notice.edit(
-                content=f'{tc.mention} を確認中（{index}件目）',
+                content=f'{channel.mention} を確認中（{index}件目）',
                 embeds=compose_embeds(garbages, channels, users),
             )
-            async for message in tc.history(limit=None, after=fourteen_days_ago):
+            async for message in channel.history(limit=None, after=fourteen_days_ago):
                 if message.author.bot:
                     continue
                 if message.type is not discord.MessageType.default and message.type is not discord.MessageType.reply:
