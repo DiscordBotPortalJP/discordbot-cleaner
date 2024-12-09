@@ -55,6 +55,7 @@ class GarbageCollectCog(commands.Cog):
                     continue
                 if isinstance(message.author, discord.User):
                     garbages.add(message)
+                    channels.add(channels)
                     users.add(message.author)
 
         delete_count = 0
@@ -98,6 +99,7 @@ class GarbageCollectCog(commands.Cog):
                     continue
                 if isinstance(message.author, discord.User):
                     garbages.add(message)
+                    channels.add(channels)
                     users.add(message.author)
 
         delete_count = 0
