@@ -41,9 +41,10 @@ class GarbageCollectCog(commands.Cog):
         channels: set[discord.TextChannel] = set()
         users: set[discord.User] = set()
         fourteen_days_ago = datetime.datetime.now() - datetime.timedelta(days=14)
-        for index, channel in enumerate(interaction.guild.text_channels):
+        target_channels = interaction.guild.text_channels
+        for index, channel in enumerate(target_channels):
             await notice.edit(
-                content=f'{channel.mention} を確認中（{index}件目）',
+                content=f'{channel.mention} を確認中（{index}/{len(target_channels)}件目）',
                 embeds=compose_embeds(garbages, channels, users),
             )
             async for message in channel.history(limit=None, after=fourteen_days_ago):
@@ -80,14 +81,15 @@ class GarbageCollectCog(commands.Cog):
     @dpylogger
     async def _garbate_collect_voicechannel(self, interaction: discord.Interaction):
         await interaction.response.send_message('サーバー内のVCから退出者のメッセージを全削除します', ephemeral=True)
-        notice = await interaction.channel.send('全TCのメッセージを確認中です')
+        notice = await interaction.channel.send('全VCのメッセージを確認中です')
         garbages: set[discord.Message] = set()
         channels: set[discord.VoiceChannel] = set()
         users: set[discord.User] = set()
         fourteen_days_ago = datetime.datetime.now() - datetime.timedelta(days=14)
-        for index, channel in enumerate(interaction.guild.voice_channels):
+        target_channels = interaction.guild.voice_channels
+        for index, channel in enumerate(target_channels):
             await notice.edit(
-                content=f'{channel.mention} を確認中（{index}件目）',
+                content=f'{channel.mention} を確認中（{index}/{len(target_channels)}件目）',
                 embeds=compose_embeds(garbages, channels, users),
             )
             async for message in channel.history(limit=None, after=fourteen_days_ago):
